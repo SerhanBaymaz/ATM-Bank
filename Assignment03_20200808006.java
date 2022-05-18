@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 /*
     @Ibrahim Baymaz
@@ -552,6 +551,37 @@ class Company{
     }
 }//Company class (2)
 
+class Transaction{
+/*
+a. Attributes
+i. type: int - 1 for deposit, 2 for transfer, 3 for withdrawal
+ii. to: String - the account number to which to give funds
+iii. from: String - the account number from which to get funds
+iv. amount: double - the amount of funds
+ */
+    //Attributes
+    private int type;
+    private String to;
+    private  String from;
+    private double amount;
+
+
+    //Getter methods
+    public int getType() {
+        return type;
+    }
+    public String getTo() {
+        return to;
+    }
+    public String getFrom() {
+        return from;
+    }
+    public double getAmount() {
+        return amount;
+    }
+
+
+}//Transaction class()
 
 class AccountNotFoundException extends RuntimeException{
     String acctNum;
@@ -643,6 +673,14 @@ class CompanyNotFoundException extends RuntimeException{
     }
 
 }//CompanyNotFoundException
+
+class InvalidParameterException extends  Exception{
+
+    @Override
+    public String toString() {
+        return "Invalid transaction type.";
+    }
+}//InvalidParameterException
 
 public class Assignment03_20200808006 {
 
