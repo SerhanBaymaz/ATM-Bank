@@ -1,3 +1,4 @@
+import java.security.InvalidParameterException;
 import java.util.*;
 
 /*
@@ -551,20 +552,39 @@ class Company{
     }
 }//Company class (2)
 
-class Transaction{
-/*
-a. Attributes
-i. type: int - 1 for deposit, 2 for transfer, 3 for withdrawal
-ii. to: String - the account number to which to give funds
-iii. from: String - the account number from which to get funds
-iv. amount: double - the amount of funds
- */
+class  Transaction{
+
     //Attributes
     private int type;
     private String to;
     private  String from;
     private double amount;
 
+    //Constructors
+    public Transaction(int type,String to,String from,double amount){
+        this.type=type;
+        this.to=to;
+        this.from=from;
+        this.amount=amount;
+
+        if (type==2){
+            //transfer
+        }else {
+            throw new InvalidParameterException("You should enter type=2,string to,string from, double amount.");
+        }
+    }
+    public Transaction(int type,String acctNumberToOrFrom,double amount){
+        this.type=type;
+        this.amount=amount;
+
+        if(type==1){
+            //deposit
+        }else if (type==3){
+            //withdrawal
+        }else {
+            throw new InvalidParameterException("Invalid transaction type");
+        }
+    }
 
     //Getter methods
     public int getType() {
@@ -579,8 +599,6 @@ iv. amount: double - the amount of funds
     public double getAmount() {
         return amount;
     }
-
-
 }//Transaction class()
 
 class AccountNotFoundException extends RuntimeException{
@@ -673,14 +691,6 @@ class CompanyNotFoundException extends RuntimeException{
     }
 
 }//CompanyNotFoundException
-
-class InvalidParameterException extends  Exception{
-
-    @Override
-    public String toString() {
-        return "Invalid transaction type.";
-    }
-}//InvalidParameterException
 
 public class Assignment03_20200808006 {
 
@@ -802,6 +812,8 @@ public class Assignment03_20200808006 {
         b.addAccount(c.getAccount("3456"));
         b.addAccount(c.getAccount("3457"));
         System.out.println(b.toString());
+
+        //new Transaction(0,"4567","3456",1);
 
     }//main
 }//Assigment
