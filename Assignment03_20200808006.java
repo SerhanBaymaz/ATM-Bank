@@ -6,7 +6,7 @@ import java.util.*;
     @18.05.2022
  */
 
-class Bank{
+class Bank {
     //Attributes
     private String name;
     private String address;
@@ -42,13 +42,11 @@ class Bank{
         customerX.setId(id);
         customers.add(customerX);
     }
-
     public void addCompany(int id,String name){
         Company companyX = new Company(name);
         companyX.setId(id);
         companies.add(companyX);
     }
-
     public void addAccount(Account account){
         accounts.add(account);
     }
@@ -188,6 +186,29 @@ class Bank{
     @Override
     public String toString() {
         return infoForTostring();
+
+    }
+
+    public void processTransactions( Collection<Transaction> transactions,String outFile){
+            //1-Takes an unsorted List of Transaction objects and sorts them
+            //2-Then processes each Transaction by type.
+            //3-If an exception is encountered, writes to the file given in String an error log
+        // according to the following:
+        //1. “ERROR: “ + Exception type + “: “ + Transaction type + {tab} + Account number(s) separated by tab + {tab} + amount
+          // Collections.sort(transactions);
+
+        /*
+
+        sorting : firstly sort them for type,
+               if type are same sort them according to acct num which is:
+                 For Deposits – in order by account to
+                 For Transfers – in order by account to
+                 For Withdrawals – in order by account from
+
+
+         */
+
+        //Collections.sort((ArrayList<Transaction>) transactions);
 
     }
 }//Bank class
@@ -552,7 +573,7 @@ class Company{
     }
 }//Company class (2)
 
-class  Transaction{
+class Transaction implements Comparable<Transaction>{
 
     //Attributes
     private int type;
@@ -567,9 +588,7 @@ class  Transaction{
         this.from=from;
         this.amount=amount;
 
-        if (type==2){
-            //transfer
-        }else {
+        if (type!=2){
             throw new InvalidParameterException("You should enter type=2,string to,string from, double amount.");
         }
     }
@@ -577,11 +596,7 @@ class  Transaction{
         this.type=type;
         this.amount=amount;
 
-        if(type==1){
-            //deposit
-        }else if (type==3){
-            //withdrawal
-        }else {
+        if(type!=1 & type!=3){
             throw new InvalidParameterException("Invalid transaction type");
         }
     }
@@ -599,6 +614,29 @@ class  Transaction{
     public double getAmount() {
         return amount;
     }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return "type:"+type + "   amount:"+amount +"\n";
+    }
+
+    @Override
+    public int compareTo(Transaction o1) {
+        int compareSayisi = ((Transaction) o1).getType();
+        return this.type - compareSayisi;
+    }
+    /*
+    compare to string;
+    public int compareTo(Transaction o1) {
+        return from.compareTo(o1.from);
+    }
+    */
+
+
+
+
+
 }//Transaction class()
 
 class AccountNotFoundException extends RuntimeException{
@@ -696,94 +734,6 @@ public class Assignment03_20200808006 {
 
     public static void main(String[] args) throws Exception {
         // write your code here
-/*
-        Customer c1  =new Customer();
-        c1.openAccount("987");
-        c1.getAccount("987").setName("Serhan");
-        c1.getAccount("987").setSurname("Baymaz");
-        try {
-            c1.getAccount("84564");
-        } catch (AccountNotFoundException e) {
-            System.out.println("Sorun oluştu : "+e);
-        }
-
-        c1.getAccount("987").deposit(468);
-        String infos = c1.getAccount("987").toString();
-        System.out.println(infos+c1.personalAccounts);
-        try {
-            c1.closeAccount("987");
-        }catch (BalanceRemainingException e){
-            System.out.println("sorun şu : "+e);
-        }
-
-        System.out.println(infos+c1.personalAccounts);
-
-
-        Bank bank1=new Bank();
-        bank1.setName("Ziraat Bankasi");
-        bank1.setAddress("Bingöl Dortyol");
-
-        bank1.addCustomer(147,"Memati","Baş");
-        System.out.println(bank1.getCustomer(147));
-
-        bank1.addCustomer(111,"Abdulhey","Çoban");
-        try {
-            System.out.println(bank1.getCustomer(191));
-        }catch (CustomerNotFoundException ex){
-            System.out.println("problem is : "+ex.toString());
-        }
-
-        bank1.addCustomer(159,"Erhan","Güllü");
-        try {
-            System.out.println(bank1.getCustomer("Ali","Güllü"));
-        }catch (CustomerNotFoundException ex){
-            System.out.println("problem is :"+ex);
-        }
-
-        bank1.addCompany(456,"Zeze yazılım");
-        try {
-            System.out.println(bank1.getCompany(4576));
-        }catch (CompanyNotFoundException ex){
-            System.out.println("problem : "+ex);
-        }
-
-        try {
-            System.out.println(bank1.getCompany("abc şirketi"));
-        }catch (CompanyNotFoundException ex){
-            System.out.println("problem : "+ex);
-        }
-
-        bank1.addAccount(c1.getAccount("987"));
-        try {
-            System.out.println(bank1.getAccount("98788"));
-        }catch (AccountNotFoundException ex){
-            System.out.println("sıkıntı : " +ex);
-        }
-
-        Account acc5=new Account("456",800);
-        Account acc6 = new Account("963",500);
-        bank1.addAccount(acc5);
-        bank1.addAccount(acc6);
-        System.out.println("before transfer acc5 : "+bank1.getAccount("456").getBalance());
-        System.out.println("before transfer acc6 : "+bank1.getAccount("963").getBalance());
-        System.out.println();
-        try {
-            bank1.transferFunds("456","963",-5005);
-        }catch (Exception e){
-            System.out.println(e);
-        }
-
-        System.out.println("After transfer acc5 :"+bank1.getAccount("456").getBalance());
-        System.out.println("After transfer acc6 :"+bank1.getAccount("963").getBalance());
-
-        try {
-            bank1.closeAccount("454356");
-        }catch (Exception e){
-            System.out.println(e);
-        }
-
-        System.out.println(bank1.toString());
-*/
         Bank b = new Bank("My Bank", "My Bank's Address");
         b.addCompany(1, "Company 1");
         b.getCompany(1).openAccount("1234", 0.05);
@@ -811,7 +761,21 @@ public class Assignment03_20200808006 {
         c = b.getCustomer(1);
         b.addAccount(c.getAccount("3456"));
         b.addAccount(c.getAccount("3457"));
-        System.out.println(b.toString());
+        //System.out.println(b.toString());
+
+
+        Collection<Transaction> ts = new ArrayList<Transaction>();
+        ts.add(new Transaction(1,"1230",45646));
+        //ts.add(new Transaction(2,"1234,",500));
+        //ts.add(new Transaction(5,"1237","8759",454));
+        ts.add(new Transaction(3,"1235",4564654));
+        ts.add(new Transaction(2,"1236","8789",4568));
+        ts.add(new Transaction(2,"1237","456",500));
+        ts.add(new Transaction(3,"1238",508640));
+        ts.add(new Transaction(1,"1239",7080));
+        Collections.sort((ArrayList<Transaction>) ts);
+        System.out.println(ts);
+
 
         //new Transaction(0,"4567","3456",1);
 
