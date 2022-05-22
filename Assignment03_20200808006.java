@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.security.InvalidParameterException;
 import java.util.*;
 
@@ -189,7 +191,7 @@ class Bank {
 
     }
 
-    public void processTransactions( Collection<Transaction> transactions,String outFile){
+    public void processTransactions( Collection<Transaction> transactions,String outFile) throws FileNotFoundException {
             //1-Takes an unsorted List of Transaction objects and sorts them
             //2-Then processes each Transaction by type.
             //3-If an exception is encountered, writes to the file given in String an error log
@@ -204,12 +206,37 @@ class Bank {
                  For Deposits – in order by account to
                  For Transfers – in order by account to
                  For Withdrawals – in order by account from
-
-
          */
+        Collections.sort((ArrayList<Transaction>) transactions);
+        for (Transaction i : transactions) {
+            if(i.getType()==1){
+                //1 for deposit,
+                for (Account z : accounts){
+                    if (z.getAcctNum()==i.getAcctNumberToOrFrom())
+                    z.deposit(i.getAmount());
+                }
+            }else if(i.getType()==2){
+                //2 for transfer,
 
-        //Collections.sort((ArrayList<Transaction>) transactions);
 
+
+            }else if(i.getType()==3){
+                //3 for withdrawal
+                for (Account z : accounts){
+                    if (z.getAcctNum()==i.getAcctNumberToOrFrom())
+                        z.withdrawal(i.getAmount());
+                }
+            }else{
+                try {
+                   if(i.getType()==2) ;
+                }catch (Exception e){
+                    PrintWriter p = new PrintWriter(outFile );
+
+                }
+
+            }
+
+        }
     }
 }//Bank class
 
@@ -580,6 +607,7 @@ class Transaction implements Comparable<Transaction>{
     private String to;
     private  String from;
     private double amount;
+    private  String acctNumberToOrFrom;
 
     //Constructors
     public Transaction(int type,String to,String from,double amount){
@@ -595,6 +623,7 @@ class Transaction implements Comparable<Transaction>{
     public Transaction(int type,String acctNumberToOrFrom,double amount){
         this.type=type;
         this.amount=amount;
+        this.acctNumberToOrFrom=acctNumberToOrFrom;
 
         if(type!=1 & type!=3){
             throw new InvalidParameterException("Invalid transaction type");
@@ -613,6 +642,10 @@ class Transaction implements Comparable<Transaction>{
     }
     public double getAmount() {
         return amount;
+    }
+
+    public String getAcctNumberToOrFrom() {
+        return acctNumberToOrFrom;
     }
 
     @Override
@@ -768,13 +801,13 @@ public class Assignment03_20200808006 {
         ts.add(new Transaction(1,"1230",45646));
         //ts.add(new Transaction(2,"1234,",500));
         //ts.add(new Transaction(5,"1237","8759",454));
-        ts.add(new Transaction(3,"1235",4564654));
-        ts.add(new Transaction(2,"1236","8789",4568));
-        ts.add(new Transaction(2,"1237","456",500));
-        ts.add(new Transaction(3,"1238",508640));
-        ts.add(new Transaction(1,"1239",7080));
+        ts.add(new Transaction(3,"3456",50));
+        System.out.println(        b.getAccount("3456").getBalance());
+        b.processTransactions(ts,"");
+        System.out.println(        b.getAccount("3456").getBalance());
         Collections.sort((ArrayList<Transaction>) ts);
         System.out.println(ts);
+
 
 
         //new Transaction(0,"4567","3456",1);
